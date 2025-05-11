@@ -1,27 +1,31 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Добавляем сервисы
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+// Используем маршруты
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Включаем статические файлы
 app.UseStaticFiles();
 
+// Маршруты
 app.UseRouting();
 
-app.UseAuthorization();
-
+// Указание маршрута по умолчанию
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Student}/{action=Index}/{id?}"); // Изменяем на Student по умолчанию
 
 app.Run();
+

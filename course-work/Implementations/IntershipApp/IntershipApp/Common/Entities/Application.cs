@@ -10,20 +10,20 @@ namespace Common.Entities
     {
         public int Id { get; set; }
         public int StudentId { get; set; }
-        public Student Student { get; set; } // Навигационное свойство
+        public Student Student { get; set; } 
 
         public int InternshipId { get; set; }
-        public Internship Internship { get; set; } // Навигационное свойство
+        public Internship Internship { get; set; } 
 
-        public DateTime ApplicationDate { get; set; } // Дата подачи заявки
-        public ApplicationStatus Status { get; set; } // Статус заявки
+        public DateTime ApplicationDate { get; set; } 
+        public ApplicationStatus Status { get; set; } 
     }
 
     public enum ApplicationStatus
     {
-        Pending,    // Ожидает рассмотрения
-        Accepted,   // Принята
-        Rejected    // Отклонена
+        Pending,    
+        Accepted,   
+        Rejected    
     }
 }
 

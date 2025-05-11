@@ -1,0 +1,40 @@
+﻿@model List<InternshipApp.ViewModels.StudentVM>
+
+<h2>Students</h2>
+
+<p>
+    <a href="@Url.Action("Create", "Student")">Add New Student</a>
+</p>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>University</th>
+            <th>Degree</th>
+            <th>Actions</th>  <!-- Колонка для кнопок Edit/Delete -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.FullName</td>
+                <td>@student.Email</td>
+                <td>@student.University</td>
+                <td>@student.Degree</td>
+                <td>
+                    <!-- Ссылки на страницы редактирования и удаления -->
+                    <a href="@Url.Action("Edit", "Student", new { id = student.Id })">Edit</a> |
+                    <a href="@Url.Action("Delete", "Student", new { id = student.Id })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+
