@@ -1,0 +1,62 @@
+﻿@model InternshipApp.Helpers.PaginatedList<Common.Entities.Internship>
+@{
+    ViewData["Title"] = "Мои стажировки";
+}
+
+<h2>Мои стажировки</h2>
+
+<form asp-action="MyInternships" method="get" class="mb-3">
+    <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Поиск..." class="form-control" />
+    <button type="submit" class="btn btn-primary mt-2">Поиск</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="MyInternships" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Название
+                </a>
+            </th>
+            <th>Описание</th>
+            <th>
+                <a asp-action="MyInternships" asp-route-sortOrder="@ViewData["StartDateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Дата начала
+                </a>
+            </th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var internship in Model)
+        {
+            <tr>
+                <td>@internship.Title</td>
+                <td>@internship.Description</td>
+                <td>@internship.StartDate.ToShortDateString()</td>
+                <td>
+                    <a asp-action="Applications" asp-route-internshipId="@internship.Id" class="btn btn-sm btn-primary">Заявки</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+            <a class="page-link" asp-action="MyInternships" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Предыдущая</a>
+        </li>
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                <a class="page-link" asp-action="MyInternships" asp-route-pageNumber="@i" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@i</a>
+            </li>
+        }
+        <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+            <a class="page-link" asp-action="MyInternships" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Следующая</a>
+        </li>
+    </ul>
+</nav>
+
+<a asp-action="CreateInternship" class="btn btn-success mt-3">Добавить стажировку</a>

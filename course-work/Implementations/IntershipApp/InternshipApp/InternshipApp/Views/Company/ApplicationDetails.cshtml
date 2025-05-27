@@ -1,0 +1,29 @@
+﻿@model Common.Entities.Application
+
+@{
+    ViewData["Title"] = "Мотивационное письмо";
+}
+
+<h2 class="mb-4">Заявка от студента</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Student.FullName</h5>
+        <p><strong>Дата регистрации студента:</strong> @Model.Student.RegistrationDate.ToShortDateString()</p> <!-- Добавлено -->
+
+        <h6 class="card-subtitle mb-2 text-muted">Стажировка: @Model.Internship.Title</h6>
+        <p class="card-text"><strong>Дата подачи:</strong> @Model.ApplicationDate.ToShortDateString()</p>
+        <p class="card-text"><strong>Статус:</strong> @Model.Status</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-light">
+        <strong>Мотивационное письмо</strong>
+    </div>
+    <div class="card-body">
+        <p>@Model.MotivationLetter</p>
+    </div>
+</div>
+
+<a asp-action="Applications" asp-route-internshipId="@Model.InternshipId" class="btn btn-secondary mt-3">Назад к заявкам</a>

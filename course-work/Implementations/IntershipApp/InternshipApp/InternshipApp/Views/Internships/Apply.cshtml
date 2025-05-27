@@ -1,0 +1,27 @@
+﻿@model InternshipApp.ViewModels.ApplicationCreateVM
+
+<h2>Подать заявку на стажировку</h2>
+
+<form asp-action="Apply" method="post">
+    <input type="hidden" asp-for="InternshipId" />
+
+    <div class="mb-3">
+        <label asp-for="MotivationLetter" class="form-label"></label>
+        <textarea asp-for="MotivationLetter" class="form-control"></textarea>
+        <span asp-validation-for="MotivationLetter" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="HasPortfolio" class="form-check-input" />
+        <label asp-for="HasPortfolio" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Отправить заявку</button>
+    <a asp-action="Details" asp-route-id="@Model.InternshipId" class="btn btn-secondary">Отмена</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

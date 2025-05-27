@@ -1,0 +1,208 @@
+﻿@model InternshipApp.ViewModels.AdminDashboardVM
+
+@{
+    ViewData["Title"] = "Админ панель";
+}
+
+<h1>Админ панель</h1>
+
+<hr />
+
+<!-- --- ФОРМА ПОИСКА И СОРТИРОВКИ ПОЛЬЗОВАТЕЛЕЙ --- -->
+<h2>Пользователи</h2>
+<form method="get" asp-action="Index">
+    <input type="hidden" name="studentPage" value="@Model.Students.PageIndex" />
+    <input type="hidden" name="companyPage" value="@Model.Companies.PageIndex" />
+
+    <input type="text" name="userSearchString" value="@Model.UserSearchString" placeholder="Поиск по имени или email" />
+    <button type="submit">Поиск</button>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index"
+                   asp-route-userSortOrder="@(Model.UserSortOrder == "username_desc" ? "" : "username_desc")"
+                   asp-route-userSearchString="@Model.UserSearchString"
+                   asp-route-studentPage="@Model.Students.PageIndex"
+                   asp-route-companyPage="@Model.Companies.PageIndex">
+                    Имя пользователя
+                    @(Model.UserSortOrder == "" ? "▲" : Model.UserSortOrder == "username_desc" ? "▼" : "")
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-userSortOrder="@(Model.UserSortOrder == "email" ? "email_desc" : "email")"
+                   asp-route-userSearchString="@Model.UserSearchString"
+                   asp-route-studentPage="@Model.Students.PageIndex"
+                   asp-route-companyPage="@Model.Companies.PageIndex">
+                    Email
+                    @(Model.UserSortOrder == "email" ? "▲" : Model.UserSortOrder == "email_desc" ? "▼" : "")
+                </a>
+            </th>
+            <th>Роль</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td>
+                <td>
+                    <a asp-action="DeleteUser" asp-route-id="@user.Id"
+                       onclick="return confirm('Удалить пользователя?');" class="btn btn-danger btn-sm">
+                        Удалить
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Пагинация пользователей">
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.Users.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Users.PageIndex ? "active" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-userPage="@i"
+                   asp-route-userSortOrder="@Model.UserSortOrder"
+                   asp-route-userSearchString="@Model.UserSearchString"
+                   asp-route-studentPage="@Model.Students.PageIndex"
+                   asp-route-companyPage="@Model.Companies.PageIndex">@i</a>
+            </li>
+        }
+    </ul>
+</nav>
+
+<hr />
+
+<!-- --- ФОРМА ПОИСКА И СОРТИРОВКИ СТУДЕНТОВ --- -->
+<h2>Студенты</h2>
+<form method="get" asp-action="Index">
+    <input type="hidden" name="userPage" value="@Model.Users.PageIndex" />
+    <input type="hidden" name="companyPage" value="@Model.Companies.PageIndex" />
+
+    <input type="text" name="studentSearchString" value="@Model.StudentSearchString" placeholder="Поиск по имени или email" />
+    <button type="submit">Поиск</button>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index"
+                   asp-route-studentSortOrder="@(Model.StudentSortOrder == "name_desc" ? "" : "name_desc")"
+                   asp-route-studentSearchString="@Model.StudentSearchString"
+                   asp-route-userPage="@Model.Users.PageIndex"
+                   asp-route-companyPage="@Model.Companies.PageIndex">
+                    Имя студента
+                    @(Model.StudentSortOrder == "" ? "▲" : Model.StudentSortOrder == "name_desc" ? "▼" : "")
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-studentSortOrder="@(Model.StudentSortOrder == "email" ? "email_desc" : "email")"
+                   asp-route-studentSearchString="@Model.StudentSearchString"
+                   asp-route-userPage="@Model.Users.PageIndex"
+                   asp-route-companyPage="@Model.Companies.PageIndex">
+                    Email
+                    @(Model.StudentSortOrder == "email" ? "▲" : Model.StudentSortOrder == "email_desc" ? "▼" : "")
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model.Students)
+        {
+            <tr>
+                <td>@student.FullName</td>
+                <td>@student.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Пагинация студентов">
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.Students.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Students.PageIndex ? "active" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-studentPage="@i"
+                   asp-route-studentSortOrder="@Model.StudentSortOrder"
+                   asp-route-studentSearchString="@Model.StudentSearchString"
+                   asp-route-userPage="@Model.Users.PageIndex"
+                   asp-route-companyPage="@Model.Companies.PageIndex">@i</a>
+            </li>
+        }
+    </ul>
+</nav>
+
+<hr />
+
+<!-- --- ФОРМА ПОИСКА И СОРТИРОВКИ КОМПАНИЙ --- -->
+<h2>Компании</h2>
+<form method="get" asp-action="Index">
+    <input type="hidden" name="userPage" value="@Model.Users.PageIndex" />
+    <input type="hidden" name="studentPage" value="@Model.Students.PageIndex" />
+
+    <input type="text" name="companySearchString" value="@Model.CompanySearchString" placeholder="Поиск по названию или email" />
+    <button type="submit">Поиск</button>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index"
+                   asp-route-companySortOrder="@(Model.CompanySortOrder == "name_desc" ? "" : "name_desc")"
+                   asp-route-companySearchString="@Model.CompanySearchString"
+                   asp-route-userPage="@Model.Users.PageIndex"
+                   asp-route-studentPage="@Model.Students.PageIndex">
+                    Название компании
+                    @(Model.CompanySortOrder == "" ? "▲" : Model.CompanySortOrder == "name_desc" ? "▼" : "")
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-companySortOrder="@(Model.CompanySortOrder == "email" ? "email_desc" : "email")"
+                   asp-route-companySearchString="@Model.CompanySearchString"
+                   asp-route-userPage="@Model.Users.PageIndex"
+                   asp-route-studentPage="@Model.Students.PageIndex">
+                    Email
+                    @(Model.CompanySortOrder == "email" ? "▲" : Model.CompanySortOrder == "email_desc" ? "▼" : "")
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var company in Model.Companies)
+        {
+            <tr>
+                <td>@company.Name</td>
+                <td>@company.ContactEmail</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Пагинация компаний">
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.Companies.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Companies.PageIndex ? "active" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-companyPage="@i"
+                   asp-route-companySortOrder="@Model.CompanySortOrder"
+                   asp-route-companySearchString="@Model.CompanySearchString"
+                   asp-route-userPage="@Model.Users.PageIndex"
+                   asp-route-studentPage="@Model.Students.PageIndex">@i</a>
+            </li>
+        }
+    </ul>
+</nav>

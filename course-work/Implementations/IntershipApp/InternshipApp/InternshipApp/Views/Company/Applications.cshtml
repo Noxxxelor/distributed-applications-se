@@ -1,0 +1,45 @@
+﻿@model IEnumerable<InternshipApp.ViewModels.ApplicationVM>
+
+@{
+    ViewData["Title"] = "Заявки на стажировки";
+}
+
+<h2>Заявки на стажировки</h2>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Студент</th>
+            <th>Дата регистрации</th> <!-- Новая колонка -->
+            <th>Стажировка</th>
+            <th>Статус</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var app in Model)
+        {
+            <tr>
+                <td>@app.StudentName</td>
+                <td>@app.StudentRegistrationDate.ToShortDateString()</td> <!-- Вывод даты -->
+                <td>@app.InternshipTitle</td>
+                <td>@app.Status</td>
+                <td>
+                    <a asp-action="ApplicationDetails" asp-route-id="@app.Id" class="btn btn-sm btn-info me-1">Посмотреть</a>
+
+                    <form asp-action="UpdateStatus" method="post" class="d-inline">
+                        <input type="hidden" name="applicationId" value="@app.Id" />
+                        <select name="status" class="form-select form-select-sm d-inline w-auto">
+                            <option value="Pending" selected="@(@app.Status == Common.Entities.ApplicationStatus.Pending)">Pending</option>
+                            <option value="Accepted" selected="@(@app.Status == Common.Entities.ApplicationStatus.Accepted)">Accepted</option>
+                            <option value="Rejected" selected="@(@app.Status == Common.Entities.ApplicationStatus.Rejected)">Rejected</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary ms-1">Обновить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="MyInternships" class="btn btn-secondary mt-3">Назад к стажировкам</a>

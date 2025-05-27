@@ -1,0 +1,102 @@
+﻿@model InternshipApp.ViewModels.RegisterVM
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Register" method="post" novalidate>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" type="email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ConfirmPassword" class="form-label"></label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Role" class="form-label"></label>
+        <select asp-for="Role" id="Role" class="form-select">
+            <option value="Student">Студент</option>
+            <option value="Company">Компания</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <div id="studentFields">
+        <h4>Данные студента</h4>
+
+        <div class="mb-3">
+            <label asp-for="StudentFullName" class="form-label"></label>
+            <input asp-for="StudentFullName" class="form-control" />
+            <span asp-validation-for="StudentFullName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="University" class="form-label"></label>
+            <input asp-for="University" class="form-control" />
+            <span asp-validation-for="University" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Degree" class="form-label"></label>
+            <input asp-for="Degree" class="form-control" />
+            <span asp-validation-for="Degree" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div id="companyFields" style="display: none;">
+        <h4>Данные компании</h4>
+
+        <div class="mb-3">
+            <label asp-for="CompanyName" class="form-label"></label>
+            <input asp-for="CompanyName" class="form-control" />
+            <span asp-validation-for="CompanyName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CompanyAddress" class="form-label"></label>
+            <input asp-for="CompanyAddress" class="form-control" />
+            <span asp-validation-for="CompanyAddress" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CompanyPhone" class="form-label"></label>
+            <input asp-for="CompanyPhone" class="form-control" />
+            <span asp-validation-for="CompanyPhone" class="text-danger"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+</form>
+
+@section Scripts {
+    
+    <script>
+        function toggleRoleFields() {
+            const role = document.getElementById("Role").value;
+            document.getElementById("studentFields").style.display = (role === "Student") ? "block" : "none";
+            document.getElementById("companyFields").style.display = (role === "Company") ? "block" : "none";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("Role").addEventListener("change", toggleRoleFields);
+            toggleRoleFields(); 
+        });
+    </script>
+
+    
+    <partial name="_ValidationScriptsPartial" />
+}

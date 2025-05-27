@@ -1,0 +1,83 @@
+﻿@model InternshipApp.ViewModels.InternshipsIndexVM
+
+@{
+    ViewData["Title"] = "Доступные стажировки";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="form-row">
+        <input type="text" name="searchTitle" value="@Model.SearchTitle" placeholder="Название" class="form-control col-md-3 mr-2" />
+        <input type="text" name="searchLocation" value="@Model.SearchLocation" placeholder="Локация" class="form-control col-md-3 mr-2" />
+        <button type="submit" class="btn btn-primary">Поиск</button>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th><a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]">Название</a></th>
+            <th>Компания</th>
+            <th><a asp-action="Index" asp-route-sortOrder="@ViewData["StartDateSortParm"]">Начало</a></th>
+            <th>Окончание</th>
+            <th>Локация</th>
+            <th><a asp-action="Index" asp-route-sortOrder="@ViewData["SalarySortParm"]">Зарплата</a></th>
+            <th>Статус</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var internship in Model.Internships)
+        {
+            var hasApplied = Model.ApplicationsStatus.ContainsKey(internship.Id);
+            var status = hasApplied ? Model.ApplicationsStatus[internship.Id].ToString() : "Не подано";
+            <tr>
+                <td>@internship.Title</td>
+                <td>@internship.CompanyId</td>
+                <td>@internship.StartDate.ToShortDateString()</td>
+                <td>@internship.EndDate.ToShortDateString()</td>
+                <td>@internship.Location</td>
+                <td>@internship.Salary.ToString("C")</td>
+                <td>@status</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@internship.Id" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav>
+    <ul class="pagination">
+        @if (Model.Pagination.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="@(Model.Pagination.PageIndex - 1)"
+                   asp-route-searchTitle="@Model.SearchTitle"
+                   asp-route-searchLocation="@Model.SearchLocation">Назад</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.Pagination.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Pagination.PageIndex ? "active" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="@i"
+                   asp-route-searchTitle="@Model.SearchTitle"
+                   asp-route-searchLocation="@Model.SearchLocation">@i</a>
+            </li>
+        }
+
+        @if (Model.Pagination.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="@(Model.Pagination.PageIndex + 1)"
+                   asp-route-searchTitle="@Model.SearchTitle"
+                   asp-route-searchLocation="@Model.SearchLocation">Вперёд</a>
+            </li>
+        }
+    </ul>
+</nav>

@@ -1,0 +1,65 @@
+﻿@model InternshipApp.ViewModels.MyApplicationsVM
+
+@{
+    ViewData["Title"] = "Мои заявки";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="MyApplications" method="get" class="form-inline mb-3">
+    <select name="statusFilter" class="form-control mr-2">
+        <option value="">Все статусы</option>
+        @foreach (var status in Enum.GetValues(typeof(Common.Entities.ApplicationStatus)))
+        {
+            <option value="@status" selected="@(Model.CurrentFilter == status.ToString() ? "selected" : null)">
+                @status
+            </option>
+        }
+    </select>
+    <button type="submit" class="btn btn-primary">Фильтр</button>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th><a asp-action="MyApplications" asp-route-sortOrder="@ViewData["TitleSortParm"]">Стажировка</a></th>
+            <th><a asp-action="MyApplications" asp-route-sortOrder="@ViewData["StatusSortParm"]">Статус</a></th>
+            <th>Студент</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var app in Model.Applications)
+        {
+            <tr>
+                <td>@app.InternshipTitle</td>
+                <td>@app.Status</td>
+                <td>@app.StudentName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav>
+    <ul class="pagination">
+        @if (Model.Pagination.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="MyApplications" asp-route-page="@(Model.Pagination.PageIndex - 1)" asp-route-statusFilter="@Model.CurrentFilter">Назад</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.Pagination.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Pagination.PageIndex ? "active" : "")">
+                <a class="page-link" asp-action="MyApplications" asp-route-page="@i" asp-route-statusFilter="@Model.CurrentFilter">@i</a>
+            </li>
+        }
+
+        @if (Model.Pagination.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="MyApplications" asp-route-page="@(Model.Pagination.PageIndex + 1)" asp-route-statusFilter="@Model.CurrentFilter">Вперёд</a>
+            </li>
+        }
+    </ul>
+</nav>

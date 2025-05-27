@@ -1,0 +1,27 @@
+﻿@model InternshipApp.ViewModels.InternshipDetailsVM
+
+<h2>@Model.Title</h2>
+
+<div>
+    <strong>Компания:</strong> @Model.CompanyName<br />
+    <strong>Описание:</strong> @Model.Description<br />
+    <strong>Период:</strong> @Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()<br />
+    <strong>Локация:</strong> @Model.Location<br />
+    <strong>Зарплата:</strong> @Model.Salary.ToString("C")<br />
+</div>
+
+<p>
+    @if (Model.ApplicationStatus == null)
+    {
+        <a asp-action="Apply" asp-route-id="@Model.Id" class="btn btn-primary">Подать заявку</a>
+    }
+    else
+    {
+        <span class="badge
+            @(Model.ApplicationStatus == Common.Entities.ApplicationStatus.Pending ? "bg-warning" :
+               Model.ApplicationStatus == Common.Entities.ApplicationStatus.Accepted ? "bg-success" : "bg-danger")">
+            Статус заявки: @Model.ApplicationStatus
+        </span>
+    }
+    <a asp-action="Index" class="btn btn-secondary">Назад</a>
+</p>
