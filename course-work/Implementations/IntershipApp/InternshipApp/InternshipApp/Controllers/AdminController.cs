@@ -166,5 +166,62 @@ namespace InternshipApp.Controllers
 
             return RedirectToAction("Index");
         }
+
+        
+        public async Task<IActionResult> EditUser(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+                return NotFound();
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var model = new ApplicationUser
+            {
+                Id = user.Id,
+                Email = user.Email,
+                UserName = user.UserName,
+                Role = roles.FirstOrDefault() ?? ""
+            };
+
+            return View(model);
+        }
+
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(string id, ApplicationUser model)
+        {
+            if (id != model.Id)
+                return NotFound();
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+                return NotFound();
+
+            user.Email = model.Email;
+            user.UserName = model.UserName;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error.Description);
+                return View(model);
+            }
+
+            
+            var existingRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, existingRoles);
+            if (!string.IsNullOrWhiteSpace(model.Role))
+                await _userManager.AddToRoleAsync(user, model.Role);
+
+            return RedirectToAction(nameof(Index)); 
+        }
+
+
     }
 }
